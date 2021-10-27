@@ -16,7 +16,7 @@ public class NettySocketClientHandler extends ChannelInboundHandlerAdapter {
   }
 
   @Override
-  public void channelActive(final ChannelHandlerContext ctx) {
+  public void channelActive(final ChannelHandlerContext ctx) throws Exception {
     ByteBuf messageBuffer = Unpooled.buffer();
     messageBuffer.writeBytes(msg.getBytes());
 
@@ -27,18 +27,18 @@ public class NettySocketClientHandler extends ChannelInboundHandlerAdapter {
 
   @Override
   public void channelRead(final ChannelHandlerContext ctx,
-                          final Object msg) {
+                          final Object msg) throws Exception {
     System.out.println("receive message {" + ((ByteBuf) msg).toString(Charset.defaultCharset()) +"}");
   }
 
   @Override
-  public void channelReadComplete(final ChannelHandlerContext ctx) {
+  public void channelReadComplete(final ChannelHandlerContext ctx) throws Exception {
     ctx.close();
   }
 
   @Override
   public void exceptionCaught(final ChannelHandlerContext ctx,
-                              final Throwable cause) {
+                              final Throwable cause) throws Exception {
     System.out.println(cause);
     ctx.close();
   }

@@ -31,7 +31,7 @@ public class NettySocketServer {
     ServerBootstrap serverBootstrap = new ServerBootstrap();
 
     /**
-     * group 메서드
+     * group 메서드 : 스레드 그룹을 초기화
      *
      * 1) group(EventLoopGroup eventLoopGroup)
      *  : 인자로 받은 스레드들로 스레드 그룹을 초기화.
@@ -42,11 +42,24 @@ public class NettySocketServer {
      */
 
     /**
+     * channel 메서드 : 채널 클래스들로 소켓 모드를 설정
      *
+     * 1) NioServerSocketChannel : 논블로킹 모드의 서버 소켓 채널을 생성
+     * 2) LocalServerChannel : 하나의 자바 가상 머신에서 가상 통신을 위한 서버 소켓 채널을 생성
+     * 3) OioServerSocketChannel : 블로킹 모드의 서버 소켓 채널을 생성
+     * 4) EpollServerSocketChannel : 리눅스 커널의 epoll 입출력 모드를 치언하는 서버 소켓 채널을 생성
+     *                               (epoll은 리눅스에서만 사용할 수 있는 가장 빠른 입출력 처리 방식 중 하나)
+     * 5) OioSctpServerChannel : SCTP 전송 계층을 사용하는 블로킹 모드의 서버 소켓 채널을 생성
+     *                           SCTP는 스트림 제어 전송 프로토콜을 의미하며, TCP와 UDP의 특성을 같이 가지고 있고, TCP의 보안 문제를 해결
+     * 6) NioSctpServerChannel : SCTP 전송 계층을 사용하는 논블로킹 모드의 서버 소켓 채널을 생성
+     * 7) NioUdtByteAcceptorChannel : UDT를 지원하는 논블로킹 모드의 서버 소켓 채널을 생성
+     *                                UDT는 UDP-based Data Transfer protocol 이라는 뜻으로 UDP를 기반으로 하지만,
+     *                                데이터 전송의 신뢰성을 보장할 수 있는 대용량 데이터 전송 프로토콜이다
+     * 8) NioUdtMessageAcceptorChannel : 프로토콜을 지원하는 블로킹 모드의 서버 소켓 채널을 생성
      */
 
     serverBootstrap.group(bossGroup, workerGroup)
-      .channel(NioServerSocketChannel.class)
+      .channel(NioServerSocketChannel.class) // NIO 전송채널을 이용하도록 지정
       .childHandler(new ChannelInitializer<SocketChannel>() {
         @Override
         public void initChannel(SocketChannel ch) {
